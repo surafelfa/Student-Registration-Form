@@ -1,0 +1,7 @@
+.nav-link-wrapper a:hover,.nav-link-wrapper a:active,.nav-link-wrapper a[href="index.html"]{
+    background-color: rgb(8,115,181);
+    color: white;
+}
+.main{
+    display: flex;
+}

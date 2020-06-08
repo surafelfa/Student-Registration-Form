@@ -1,0 +1,4 @@
+.nav-link-wrapper a:hover,.nav-link-wrapper a:active,.nav-link-wrapper a[href="instructer.html"]{
+    background-color: rgb(8,115,181);
+    color: white;
+}
