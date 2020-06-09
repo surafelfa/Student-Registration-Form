@@ -22,7 +22,7 @@ body{
     display: flex;
     margin-top: 25px;
 }
-.nav-wrapper > .right-side >div{
+.nav-wrapper .right-side > div{
     font-size: 16px;
     text-transform: uppercase;
 }
@@ -94,6 +94,7 @@ input:focus {
     background: white;
     color: rgb(8,115,181);
     cursor: pointer;
+    border: 1px solid rgb(8,115,181);
     
 }
 .copy{

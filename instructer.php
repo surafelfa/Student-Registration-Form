@@ -72,6 +72,39 @@
             </div>
         </footer>
     </div>
+    <?php
+        include_once 'connection.php';
+        $fname = $lname=$gender=$eaddress = $pnumber=$level= "";
 
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $fname = test_input($_POST["fname"]);
+            $lname = test_input($_POST["lname"]);
+            $gender = test_input($_POST["gender"]);
+            $eaddress = test_input($_POST["eaddress"]);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $emailErr = "Invalid email format";
+            }
+            $pnumber = test_input($_POST["pnumber"]);
+            $level = test_input($_POST["level"]);
+        }
+        function test_input($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+        $cl= new Lecturer;
+        $cl->fname=$fname;
+        $cl->lname=$lname;
+        $cl->gender=$gender;
+        $cl->eaddress=$eaddress;
+        $cl->pnumber=$pnumber;
+        $cl->level=$level;
+        $cl->insert();
+
+    ?>
+    
 </body>
 </html>
+
+

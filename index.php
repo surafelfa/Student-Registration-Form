@@ -6,7 +6,20 @@
     <meta name="author" content="Surafel Fantu">
     <title>Registration Form | Welcome</title>
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="index.css">
+    <style>
+        .nav-link-wrapper a:hover,.nav-link-wrapper a:active,.nav-link-wrapper a[href="index.php"]{
+            background-color: rgb(8,115,181);
+            color: white;
+        }
+        .main{
+            display: flex;
+        }
+        @media(max-width: 768px){
+            .main{
+                display: inline;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -18,9 +31,9 @@
                     </div>
                 </div>
                 <div class="right-side">
-                    <div class="nav-link-wrapper"><a href=index.html>Register Student</a></div>
-                    <div class="nav-link-wrapper"><a href="instructer.html">Register Instructer</a></div>
-                    <div class="nav-link-wrapper"><a href="course.html">Register Course</a></div>
+                    <div class="nav-link-wrapper"><a href=index.php>Register Student</a></div>
+                    <div class="nav-link-wrapper"><a href="instructer.php">Register Instructer</a></div>
+                    <div class="nav-link-wrapper"><a href="course.php">Register Course</a></div>
                 </div>
                 
             </div>

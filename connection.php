@@ -1,0 +1,36 @@
+<?php
+class Connection{
+    
+    public function getConnection(){
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        try {
+        $conn = new PDO("mysql:host=$servername;dbname=studentregistrationform", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+        }
+        return $conn;
+    }
+}
+class Lecturer{
+    public $fname,$lname,$gender,$eaddress,$pnumber,$level,$active=1;
+    private $db= new Connection;
+    private $conn = $this->db->getConnection();
+    public function insert(){
+        try{
+            $sql = "INSERT INTO Lacturer (firstname, lastname,gender,email,phoneNumber,LOE,active)
+                    VALUES ('{$this->fname}', '{$this->lname}', '{$this->gender}', 
+                            '{$this->eaddress}', '{$this->pnumber}', '{$this->level}', '{$this->active}')";
+          // use exec() because no results are returned
+            $this->conn->query($sql);
+            
+        }catch(PDOException $e) {
+            echo $sql . "<br>" . $e->getMessage();
+          } 
+          $this->conn=null;       
+    }
+}
+?>
