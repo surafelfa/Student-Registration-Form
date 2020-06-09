@@ -5,3 +5,8 @@
 .main{
     display: flex;
 }
+@media(max-width: 768px){
+    .main{
+        display: inline;
+    }
+}
