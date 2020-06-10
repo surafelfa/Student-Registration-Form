@@ -34,7 +34,7 @@
         </div>
     <div class="container">
 
-        <form accept-charset="UTF-8" action="index.php" method="post" name="main-form">
+        <form accept-charset="UTF-8" method="post" >
 
 
             <div class="registration-form">
@@ -50,24 +50,21 @@
             </div>
             <div class="info">
                 <label for="chr">Credit hours:</label><br>
-                <input type="number" id="chr" name="chr"required max="5"><br>
+                <input type="number" id="chr" name="chr"required max="5" min="3"><br>
             </div>
             <div class="info">
                 <label for="yr">Year the course is given:</label><br>
-                <input type="number" id="yr" name="yr"required max="4"><br>
+                <input type="number" id="yr" name="yr"required max="4" min="1"><br>
             </div>
             <div class="info">
                 <label for="tr">Term the course is given:</label><br>
-                <input type="number" id="tr" name="term"required max="3"><br>
+                <input type="number" id="tr" name="tr"required max="3"><br>
             </div>
 
             <div class="instracter">
-                <label>Instructed by:</label><br>
-                <input id="option" list="term">
-                <datalist id="term">
-                    <option value="Abera">
-                    <option value="Alemu">
-                    <option value="Kebede">
+                <label for="names">Instructed by:</label><br>
+                <input id="option2" list="names" name="names">
+                <datalist id="names" >
                 </datalist><br>
             </div>
             <div class="btn">
@@ -81,6 +78,50 @@
             </div>
         </footer>
     </div>
+    <?php
+        include_once 'main.php';
+        $pd= new ProcessingData;
+        $lecturersName=$pd->loadInstructers();
+        $courseName=$courseCode=$creditHour=$yearThecourseIsGiven=$termTheCourseIsGiven="";
+        $instructedBy=0;
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $courseName = test_input($_POST["name"]);
+            $courseCode = test_input($_POST["code"]);
+            $creditHour = test_input($_POST["chr"]);
+            $yearThecourseIsGiven = test_input($_POST["yr"]);
+            $termTheCourseIsGiven = test_input($_POST["tr"]);
+            //print_r($pd->lecturers) ;
+            foreach($pd->lecturers as $key=>$value ) {
+                if(strcmp(test_input($_POST["names"]),$value )==0   ){
+                    $instructedBy=$key;
+                    
+                break;
+                }
+              }
+            
+            $cl= new ProcessingData;
+            $cl->courseName=$courseName;
+            $cl->courseCode=$courseCode;
+            $cl->creditHour=$creditHour;
+            $cl->yearThecourseIsGiven=$yearThecourseIsGiven;
+            $cl->termTheCourseIsGiven=$termTheCourseIsGiven;
+            $cl->instructedBy=$instructedBy;
+            $cl->insertCourse();
+        }
+        function test_input($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
+
+    ?>
+    <script> 
+        var str= '<?php echo $lecturersName ?>'; // variable to store the options
+        var my_list=document.getElementById("names");
+        my_list.innerHTML = str;
+    </script>
     
 </body>
 </html>

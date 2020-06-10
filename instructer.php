@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form | Register Lectuters</title>
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="instructer.css">
+    <style>
+        .nav-link-wrapper a:hover,.nav-link-wrapper a:active,.nav-link-wrapper a[href="instructer.php"]{
+        background-color: rgb(8,115,181);
+        color: white;
+        }
+    </style>
 </head>
 <body>
     
@@ -19,9 +24,9 @@
                     </div>
                     
                         <div class="right-side">
-                            <div class="nav-link-wrapper"><a href=index.html>Register Student</a></div>
-                            <div class="nav-link-wrapper"><a href="instructer.html">Register Instructer</a></div>
-                            <div class="nav-link-wrapper"><a href="course.html">Register Course</a></div>
+                            <div class="nav-link-wrapper"><a href=index.php>Register Student</a></div>
+                            <div class="nav-link-wrapper"><a href="instructer.php">Register Instructer</a></div>
+                            <div class="nav-link-wrapper"><a href="course.php">Register Course</a></div>
                         </div>
                     
                 </div>
@@ -29,7 +34,7 @@
         </div>
     <div class="container">
         
-        <form accept-charset="UTF-8" method="post" name="main-form">
+        <form accept-charset="UTF-8" method="post" name="instructer-form">
 
             <div class="registration-form">
                 <h1>Registration Form</h1>
@@ -73,7 +78,7 @@
         </footer>
     </div>
     <?php
-        include_once 'connection.php';
+        include_once 'main.php';
         $fname = $lname=$gender=$eaddress = $pnumber=$level= "";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -81,11 +86,19 @@
             $lname = test_input($_POST["lname"]);
             $gender = test_input($_POST["gender"]);
             $eaddress = test_input($_POST["eaddress"]);
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($eaddress, FILTER_VALIDATE_EMAIL)) {
                 $emailErr = "Invalid email format";
             }
             $pnumber = test_input($_POST["pnumber"]);
             $level = test_input($_POST["level"]);
+            $cl= new ProcessingData;
+            $cl->fname=$fname;
+            $cl->lname=$lname;
+            $cl->gender=$gender;
+            $cl->eaddress=$eaddress;
+            $cl->pnumber=$pnumber;
+            $cl->level=$level;
+            $cl->insertInstructer();
         }
         function test_input($data) {
             $data = trim($data);
@@ -93,14 +106,7 @@
             $data = htmlspecialchars($data);
             return $data;
         }
-        $cl= new Lecturer;
-        $cl->fname=$fname;
-        $cl->lname=$lname;
-        $cl->gender=$gender;
-        $cl->eaddress=$eaddress;
-        $cl->pnumber=$pnumber;
-        $cl->level=$level;
-        $cl->insert();
+        
 
     ?>
     
