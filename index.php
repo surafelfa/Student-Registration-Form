@@ -72,13 +72,13 @@
                     
                     <div class="year">
                         <label>Year student currently is in:</label><br>
-                        <input type="radio" id="first" name="year" value="1" checked onclick="handleClick(this);">
+                        <input type="radio" id="first" name="year" value="1" checked onclick="selectedYear(this);">
                         <label for="first">First year</label><br>
-                        <input type="radio" id="second" name="year" value="2" onclick="handleClick(this);">
+                        <input type="radio" id="second" name="year" value="2" onclick="selectedYear(this);">
                         <label for="second">Second year</label><br>
-                        <input type="radio" id="third" name="year" value="3" onclick="handleClick(this);">
+                        <input type="radio" id="third" name="year" value="3" onclick="selectedYear(this);">
                         <label for="third">Third year</label><br>
-                        <input type="radio" id="fouth" name="year" value="4" onclick="handleClick(this);">
+                        <input type="radio" id="fouth" name="year" value="4" onclick="selectedYear(this);">
                         <label for="fourth">Fouth year</label><br>
                     </div>
                 </div>
@@ -110,33 +110,59 @@
             </div>
             
             <div class="btn">
-                <input id="submit"type="submit" value="Submit">
-                <input id="reset"type="reset">
+                    <input id="submit"type="submit" value="Submit" disabled>
+                    <input id="reset"type="reset">
             </div>
         </form>
         <footer>
             <div class="copy">
-                <p>&copy; 2020-2012</p>
+                <p>&copy; 2020-2021</p>
             </div>
         </footer>
         
     </div>
     <?php
         include_once 'main.php';
-        $courseName=$years=$terms=[];
+        $courseNames=$years=$terms=[];
         $pd=new ProcessingData;
         $pd->loadCourse();
-        $courseName= $pd->courseName;
+        $courseNames= $pd->courseNames;
         $years=$pd->years;
         $terms=$pd->terms; 
         //print_r ($courseName) ;
+        $fname =$lname=$eaddress = $pnumber="";
+        $selectedCourses=[];
+        $yearTheCourseIsGiven=$termTheCourseIsGiven=0;
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+            $fname = $pd->test_input($_POST["fname"]);
+            $lname = $pd->test_input($_POST["lname"]);
+            $eaddress = $pd->test_input($_POST["eaddress"]);
+            if (!filter_var($eaddress, FILTER_VALIDATE_EMAIL)) {
+                $emailErr = "Invalid email format";
+            }
+            $pnumber = $pd->test_input($_POST["pnumber"]);
+            $yearTheCourseIsGiven = $_POST["year"];
+            $termTheCourseIsGiven= $_POST["option1"];
+            $selectedCourses=$_POST["course"];
+
+            $pd->fname=$fname;
+            $pd->lname=$lname;
+            $pd->eaddress=$eaddress;
+            $pd->pnumber=$pnumber;
+            $pd->selectedCourses=$selectedCourses;
+            $pd->yearTheCourseIsGiven=$yearTheCourseIsGiven;
+            $pd->termTheCourseIsGiven=$termTheCourseIsGiven;
+            $pd->insertStudent();
+        }
+        
     ?>
     <script>
-        var courseName = <?php echo json_encode($courseName); ?>;
+        var courseNames = <?php echo json_encode($courseNames); ?>;
         var years = <?php echo json_encode($years); ?>;
         var terms = <?php echo json_encode($terms); ?>;
         var year=term=1;
-        function handleClick(yr) {
+        function selectedYear(yr) {
             year=yr.value;
             console.log("year "+year);
             if(document.getElementById('option1').value!="" && year>0 ){
@@ -158,20 +184,21 @@
         function createInnerHTML(){
             document.getElementById("course").innerHTML="";
             document.getElementById("course").innerHTML='<label>Courses to be taken:</label><br>';
-            for(cnk in courseName){
+            for(cnk in courseNames){
                 if(years[cnk]==year){
-                    for(cnk2 in courseName){
+                    for(cnk2 in courseNames){
                         if(terms[cnk]==term){
                             var myDiv = document.getElementById("course");
                             var checkbox = document.createElement("input"); 
                             checkbox.setAttribute("type", "checkbox");
-                            checkbox.setAttribute("name", cnk);
+                            checkbox.setAttribute("name", "course[]");
                             checkbox.setAttribute("value", cnk);
+                            checkbox.setAttribute("onclick", "enableSubmitButton()");
                             //checkbox.checked = true; 
                             myDiv.appendChild(checkbox);
                             var newlabel = document.createElement("Label");
                             newlabel.setAttribute("for",cnk);
-                            newlabel.innerHTML = courseName[cnk]+"<br>";
+                            newlabel.innerHTML = courseNames[cnk]+"<br>";
                             myDiv.appendChild(newlabel);
                             break;
                         }
@@ -180,6 +207,27 @@
                         
                 }
 
+            }
+        }
+        function enableSubmitButton(){
+            let course= document.getElementById('course');
+            let courseList= course.getElementsByTagName('input');
+            let check=false;
+            if(document.getElementById('course').innerHTML!=""){
+                for(i=0;i<courseList.length;i++){
+                    if(courseList[i].checked){
+                        check=true;
+                        break;
+                    }
+                }
+            }
+            if(check){
+                let bt= document.getElementById('submit');
+                bt.disabled=false;
+            }
+            else if (!check || document.getElementById('course').innerHTML==""){
+                let bt= document.getElementById('submit');
+                bt.disabled=true;
             }
         }
         createInnerHTML();

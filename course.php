@@ -58,7 +58,7 @@
             </div>
             <div class="info">
                 <label for="tr">Term the course is given:</label><br>
-                <input type="number" id="tr" name="tr"required max="3"><br>
+                <input type="number" id="tr" name="tr"required max="3" min="1"><br>
             </div>
 
             <div class="instracter">
@@ -82,40 +82,30 @@
         include_once 'main.php';
         $pd= new ProcessingData;
         $lecturersName=$pd->loadInstructers();
-        $courseName=$courseCode=$creditHour=$yearThecourseIsGiven=$termTheCourseIsGiven="";
+        $courseName=$courseCode=$creditHour=$yearTheCourseIsGiven=$termTheCourseIsGiven="";
         $instructedBy=0;
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $courseName = test_input($_POST["name"]);
-            $courseCode = test_input($_POST["code"]);
-            $creditHour = test_input($_POST["chr"]);
-            $yearThecourseIsGiven = test_input($_POST["yr"]);
-            $termTheCourseIsGiven = test_input($_POST["tr"]);
+            $courseName = $pd->test_input($_POST["name"]);
+            $courseCode = $pd->test_input($_POST["code"]);
+            $creditHour = $pd->test_input($_POST["chr"]);
+            $yearTheCourseIsGiven = $pd->test_input($_POST["yr"]);
+            $termTheCourseIsGiven = $pd->test_input($_POST["tr"]);
             //print_r($pd->lecturers) ;
             foreach($pd->lecturers as $key=>$value ) {
-                if(strcmp(test_input($_POST["names"]),$value )==0   ){
-                    $instructedBy=$key;
-                    
+                if(strcmp($pd->test_input($_POST["names"]),$value )==0   ){
+                    $instructedBy=$key; 
                 break;
                 }
               }
             
-            $cl= new ProcessingData;
-            $cl->courseName=$courseName;
-            $cl->courseCode=$courseCode;
-            $cl->creditHour=$creditHour;
-            $cl->yearThecourseIsGiven=$yearThecourseIsGiven;
-            $cl->termTheCourseIsGiven=$termTheCourseIsGiven;
-            $cl->instructedBy=$instructedBy;
-            $cl->insertCourse();
+            $pd->courseName=$courseName;
+            $pd->courseCode=$courseCode;
+            $pd->creditHour=$creditHour;
+            $pd->yearTheCourseIsGiven=$yearTheCourseIsGiven;
+            $pd->termTheCourseIsGiven=$termTheCourseIsGiven;
+            $pd->instructedBy=$instructedBy;
+            $pd->insertCourse();
         }
-        function test_input($data) {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
-        }
-
-
     ?>
     <script> 
         var str= '<?php echo $lecturersName ?>'; // variable to store the options

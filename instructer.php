@@ -73,40 +73,33 @@
         </form>
         <footer>
             <div class="copy">
-                <p>&copy; 2020-2012</p>
+                <p>&copy; 2020-2021</p>
             </div>
         </footer>
     </div>
     <?php
-        include_once 'main.php';
+        include 'main.php';
         $fname = $lname=$gender=$eaddress = $pnumber=$level= "";
-
+        $pd= new ProcessingData;
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $fname = test_input($_POST["fname"]);
-            $lname = test_input($_POST["lname"]);
-            $gender = test_input($_POST["gender"]);
-            $eaddress = test_input($_POST["eaddress"]);
+            $fname = $pd->test_input($_POST["fname"]);
+            $lname = $pd->test_input($_POST["lname"]);
+            $gender = $pd->test_input($_POST["gender"]);
+            $eaddress = $pd->test_input($_POST["eaddress"]);
             if (!filter_var($eaddress, FILTER_VALIDATE_EMAIL)) {
                 $emailErr = "Invalid email format";
             }
-            $pnumber = test_input($_POST["pnumber"]);
-            $level = test_input($_POST["level"]);
-            $cl= new ProcessingData;
-            $cl->fname=$fname;
-            $cl->lname=$lname;
-            $cl->gender=$gender;
-            $cl->eaddress=$eaddress;
-            $cl->pnumber=$pnumber;
-            $cl->level=$level;
-            $cl->insertInstructer();
+            $pnumber = $pd->test_input($_POST["pnumber"]);
+            $level = $pd->test_input($_POST["level"]);
+            
+            $pd->fname=$fname;
+            $pd->lname=$lname;
+            $pd->gender=$gender;
+            $pd->eaddress=$eaddress;
+            $pd->pnumber=$pnumber;
+            $pd->level=$level;
+            $pd->insertInstructer();
         }
-        function test_input($data) {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
-        }
-        
 
     ?>
     

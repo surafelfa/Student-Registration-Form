@@ -18,9 +18,17 @@ class Connection{
 }
 class ProcessingData{
     public $fname,$lname,$gender,$eaddress,$pnumber,$level,$active=1,$lecturers=[];
-    public $courseName,$courseCode,$creditHour,$yearThecourseIsGiven,$termTheCourseIsGiven,$instructedBy;
+    public $courseName,$courseCode,$creditHour,$yearTheCourseIsGiven,$termTheCourseIsGiven,$instructedBy;
+    public $courseNames=[];
     public $years=[];
     public $terms=[];
+    public $selectedCourses=[];
+    public function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
     public function insertInstructer(){
         $db= new Connection;
         $conn = $db->getConnection();
@@ -62,7 +70,7 @@ class ProcessingData{
         $conn = $db->getConnection();
         try{
             $sql = "INSERT INTO course (courseName, courseCode,creditHour,yearTheCourseIsGiven,termTheCourseIsGiven,instructerId)
-                    VALUES ('{$this->courseName}', '{$this->courseCode}', '{$this->creditHour}','{$this->yearThecourseIsGiven}', 
+                    VALUES ('{$this->courseName}', '{$this->courseCode}', '{$this->creditHour}','{$this->yearTheCourseIsGiven}', 
                     '{$this->termTheCourseIsGiven}', '{$this->instructedBy}')";
 
             $conn->query($sql);
@@ -73,7 +81,7 @@ class ProcessingData{
           $conn=null;       
     }
     public function loadCourse(){
-        $this->courseName=[];
+        $this->courseNames=[];
         //$db= new Connection;
         //$conn = $db->getConnection();
         $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
@@ -87,7 +95,7 @@ class ProcessingData{
                 $courseName=array($row["id"]=>$row["courseName"]);
                 $this->years = $this->years+$year;
                 $this->terms = $this->terms+$term;
-                $this->courseName=$this->courseName+$courseName;
+                $this->courseNames=$this->courseNames+$courseName;
 
                 //$str .= '<option value="'.$row["id"].'" >'.$row["courseName"].'" <\\option>';           
                 
@@ -95,5 +103,33 @@ class ProcessingData{
         }
         $conn=null; 
     }
+    public function insertStudent(){
+        $db= new Connection;
+        $conn = $db->getConnection();
+        try{
+            $sql = "INSERT INTO student (firstName, lastName,email,phoneNumber)
+                    VALUES ('{$this->fname}', '{$this->lname}', '{$this->eaddress}','{$this->pnumber}')";
+
+            $conn->query($sql);
+            
+            $last_id = $conn->lastInsertId();
+            foreach($this->courseNames as $key=>$value){
+                foreach($this->selectedCourses as $courseId){
+                    if($courseId==$key){
+                        $sql = "INSERT INTO studentdetail (studentId, courseId,yearStudentCurrentlyIsIN,termStudentCurrentlyIsIn)
+                                VALUES ('{$last_id}', '{$courseId}', '{$this->yearTheCourseIsGiven}','{$this->termTheCourseIsGiven}')";
+                        $conn->query($sql);
+            
+                    }
+
+                }
+            }
+            
+        }catch(PDOException $e) {
+            echo $sql . "<br>" . $e->getMessage();
+          } 
+          $conn=null;       
+    }
+
 }
 ?>
