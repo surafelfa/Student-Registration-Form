@@ -19,10 +19,11 @@ class Connection{
 class ProcessingData{
     public $fname,$lname,$gender,$eaddress,$pnumber,$level,$active=1,$lecturers=[];
     public $courseName,$courseCode,$creditHour,$yearTheCourseIsGiven,$termTheCourseIsGiven,$instructedBy;
-    public $courseNames=[];
+    public $courseNames=[],$updatedStudentId;
     public $years=[];
     public $terms=[];
     public $selectedCourses=[];
+    public $studentsFirstName=[], $studentsLastName=[], $studentsEmail=[],$studentsPhoneNumber=[];
     public function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -49,7 +50,7 @@ class ProcessingData{
         //$db= new Connection;
         //$conn = $db->getConnection();
         $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
-        $sql="SELECT id, firstname,lastname FROM lecturer";
+        $sql="SELECT id, firstname,lastname FROM lecturer WHERE active=1";
         $result = mysqli_query($conn, $sql);
         if(mysqli_num_rows($result) > 0){
             
@@ -82,8 +83,6 @@ class ProcessingData{
     }
     public function loadCourse(){
         $this->courseNames=[];
-        //$db= new Connection;
-        //$conn = $db->getConnection();
         $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
         $sql="SELECT id,courseName, yearTheCourseIsGiven,termTheCourseIsGiven FROM course";
         $result = mysqli_query($conn, $sql);
@@ -96,9 +95,6 @@ class ProcessingData{
                 $this->years = $this->years+$year;
                 $this->terms = $this->terms+$term;
                 $this->courseNames=$this->courseNames+$courseName;
-
-                //$str .= '<option value="'.$row["id"].'" >'.$row["courseName"].'" <\\option>';           
-                
             }
         }
         $conn=null; 
@@ -113,23 +109,75 @@ class ProcessingData{
             $conn->query($sql);
             
             $last_id = $conn->lastInsertId();
-            foreach($this->courseNames as $key=>$value){
+
                 foreach($this->selectedCourses as $courseId){
-                    if($courseId==$key){
-                        $sql = "INSERT INTO studentdetail (studentId, courseId,yearStudentCurrentlyIsIN,termStudentCurrentlyIsIn)
+                        $sql = "INSERT INTO studentdetail (studentId, courseId,yearStudentCurrentlyIsIn,termStudentCurrentlyIsIn)
                                 VALUES ('{$last_id}', '{$courseId}', '{$this->yearTheCourseIsGiven}','{$this->termTheCourseIsGiven}')";
                         $conn->query($sql);
             
-                    }
 
                 }
-            }
             
         }catch(PDOException $e) {
             echo $sql . "<br>" . $e->getMessage();
           } 
           $conn=null;       
     }
+    public function loadStudent(){
+        $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
+        $sql="SELECT id,firstName, lastName,email,phoneNumber FROM student";
+        $student = mysqli_query($conn, $sql);
+        /*$sql="SELECT studentId,courseId,yearStudentCurrentlyIsIn,termStudentCurrentlyIsIn,courseName
+              FROM studentdetail INNER JOIN course ON studentdetail.courseId=course.id";
+        $studentDetail = mysqli_query($conn, $sql);*/
+        if(mysqli_num_rows($student) > 0 ){
 
+            while($row=mysqli_fetch_assoc($student)){
+                $studentFirstName=array($row["id"]=>$row["firstName"]);
+                $studentLastName=array($row["id"]=>$row["lastName"]);
+                $studentEmail=array($row["id"]=>$row["email"]);
+                $studentPhoneNumber=array($row["id"]=>$row["phoneNumber"]);
+                $this->studentsFirstName=$this->studentsFirstName+$studentFirstName;
+                $this->studentsLastName=$this->studentsLastName+$studentLastName;
+                $this->studentsEmail=$this->studentsEmail+$studentEmail;
+                $this->studentsPhoneNumber=$this->studentsPhoneNumber+$studentPhoneNumber;
+            }
+            /*
+            while($row=mysqli_fetch_assoc($studentDetail)){
+                $year=array($row["studentId"]=>$row["yearStudentCurrentlyIsIn"]);
+                $term=array($row["studentId"]=>$row["termStudentCurrentlyIsIn"]);
+                $beingTakenCourse=array($row["courseId"]=>$row["studentId"]);
+                $courseName=array($row["courseId"]=>$row["courseName"]);
+                $this->selectedYears = $this->selectedYears+$year;
+                $this->selectedTerms = $this->selectedTerms+$term;
+                $this->beingTakenCourses=$this->beingTakenCourses+$beingTakenCourse;
+                $this->previouslySelectedCoursesName=$this->previouslySelectedCoursesName+$courseName;                          
+            }*/
+            
+        }
+        $conn=null; 
+    }
+    function updateStudent(){
+        $db= new Connection;
+        $conn = $db->getConnection();
+        try{
+            $sql = "UPDATE student
+                    SET firstName='$this->fname', lastName='$this->lname', email='$this->eaddress',phoneNumber = '$this->pnumber'
+                    WHERE id='$this->updatedStudentId'";
+
+            $conn->query($sql);
+            $sql="DELETE FROM studentdetail WHERE studentId=$this->updatedStudentId";
+            $conn->query($sql);
+            foreach($this->selectedCourses as $courseId){
+                $sql = "INSERT INTO studentdetail (studentId, courseId,yearStudentCurrentlyIsIn,termStudentCurrentlyIsIn)
+                VALUES ('{$this->updatedStudentId}', '{$courseId}', '{$this->yearTheCourseIsGiven}','{$this->termTheCourseIsGiven}')";
+                $conn->query($sql);
+            }          
+        }catch(PDOException $e) {
+            echo $sql . "<br>" . $e->getMessage();
+          } 
+          $conn=null;       
+    }
+    
 }
 ?>
