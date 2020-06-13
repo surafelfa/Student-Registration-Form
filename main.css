@@ -2,6 +2,7 @@
     
     font-family: sans-serif 'Segoe Print',serif,  "Century Gothic" , Tahoma, "Verdana Geneva";;
 }
+
 body{
     background-image: url(2.jpg);
     background-size: cover;
@@ -33,13 +34,8 @@ body{
     padding: 0px 8px;
     box-sizing: border-box;
 }
-.content-wrapper{
-    margin-top: 0px;
-    border-top: 3px solid goldenrod;
-    border-bottom: 3px solid goldenrod;
-}
 .container{
-    top: 50%;
+    top: 315px;
     left: 50%;
     position: absolute;
     transform: translate(-50%,-50%);
@@ -63,21 +59,31 @@ body{
     margin-bottom: 0em;
     
 }
-.info,.term,.btn,.year,.course,.instracter{
+
+.info,.term,.year,.course{
     margin: 0 5%;
-    margin-bottom: 10px;
-    
-    
+    margin-bottom: 10px;    
 }
-#fname,#lname,#eaddress,#pnumber,.term #option,.instracter #option,.btn,#name,#code,#chr,#level,#tr,#yr{
+.btn{
+    margin: 0 5%;
+}
+#id,#fname,#lname,#eaddress,#pnumber,.term #option1,
+.btn,#name,#code,#chr,#tr,#yr{
     width: 100%;
+}
+#level,#active,.info #option2{
+    width: 102.5%;
+}
+#updatebtn{
+    width: 90%;
+    margin-top: 2px;
 }
 input:focus {
     outline: none;
     border: 3px solid rgb(8,115,181);
     border-radius: 4px;
 }
-#submit,#reset{
+#submit,#reset,#searchButton,#delete,#update,#updatebtn{
     width: 45%;
     font-size: 16px;
     color: white;
@@ -89,16 +95,62 @@ input:focus {
     border-radius: 5px;
     transition:  0.5s ease-in-out;
 }
-
-#submit:hover,#submit:active,#reset:hover,#reset:active{
+#updatebtn{
+    width: 90.5%;
+    margin-top: 2px;
+}
+#delete{
+    background-color: #e74c3c;
+}
+#update,#updatebtn{
+    background-color: #f39c12;
+}
+#searchButton{
+    padding: 2px;
+    width: 50%;
+    margin-bottom: 2px;
+}
+#submit:hover,#submit:active,#reset:hover,#reset:active,
+#searchButton:hover,#searchButton:active{
     background: white;
     color: rgb(8,115,181);
     cursor: pointer;
     border: 1px solid rgb(8,115,181);
     
 }
+#delete:hover,#delete:active{
+    background-color: white;
+    color: #e74c3c;
+    cursor: pointer;
+    border: 1px solid #e74c3c;
+    
+}
+#update:hover,#update:active,#updatebtn:hover,#updatebtn:active{
+    background-color: white;
+    color: #f39c12;
+    cursor: pointer;
+    border: 1px solid #f39c12;
+}
 .copy{
     text-align: center;
+}
+#levelOfEducation{
+    margin-right: 7px;
+}
+#level,#active,.info #option2{
+    height: 22px;
+}
+.div-tooltip{
+    opacity: 0;
+    position: absolute;
+    top:0;
+    left:0;
+    background: #ecf0f1;/*//#bdc3c7;*/
+    padding: 10px 20px;
+    margin: 20px;
+    width: 130px;
+    border-radius: 5px;
+    z-index: 99999;
 }
 @media(max-width: 768px){
    .nav-wrapper,.right-side{

@@ -1,0 +1,32 @@
+//document.getElementById(selectedYears[stuInfo]).checked=true;
+                    //document.getElementById('option1').value=selectedTerms[stuInfo];
+
+                   /* for(courseId in previouslySelectedCoursesName){
+                        let count=1;
+                        console.log("1st loop");
+                        //console.log(beingTakenCourses[15]);
+                        if(stuInfo==beingTakenCourses[courseId]+count){
+                            console.log('2nd loop');
+                            //console.log(beingTakenCourses[studentId]);
+                            //for(courseId in previouslySelectedCoursesName){
+                                //console.log('3rd loop');
+                                //console.log(courseId);
+                                //if(courseId==beingTakenCourses[studentId]){
+                                    var myDiv = document.getElementById("course");
+                                    var checkbox = document.createElement("input"); 
+                                    checkbox.setAttribute("type", "checkbox");
+                                    checkbox.setAttribute("name", "course[]");
+                                    checkbox.setAttribute("value", courseId);
+                                    checkbox.setAttribute("onclick", "enableSubmitButton()");
+                                    checkbox.checked = true; 
+                                    myDiv.appendChild(checkbox);
+                                    var newlabel = document.createElement("Label");
+                                    newlabel.setAttribute("for",courseId);
+                                    newlabel.innerHTML = previouslySelectedCoursesName[courseId]+"<br>";
+                                    myDiv.appendChild(newlabel);
+                                //}                     
+                            //}     
+                        }
+
+                    }
+                    break;*/

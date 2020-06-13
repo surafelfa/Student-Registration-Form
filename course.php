@@ -61,11 +61,16 @@
                 <input type="number" id="tr" name="tr"required max="3" min="1"><br>
             </div>
 
-            <div class="instracter">
+           <!-- <div class="instructer">
                 <label for="names">Instructed by:</label><br>
-                <input id="option2" list="names" name="names">
+                <input id="option2" list="names" name="names" required>
                 <datalist id="names" >
                 </datalist><br>
+            </div>-->
+            <div class="info">
+                <label for="names">Instructed by:</label><br>
+                        <select id="option2" name="names" required>
+                        </select>
             </div>
             <div class="btn">
                 <input id="submit"type="submit" value="Submit">
@@ -74,7 +79,7 @@
         </form>
         <footer>
             <div class="copy">
-                <p>&copy; 2020-2012</p>
+                <p>&copy; 2020-2021</p>
             </div>
         </footer>
     </div>
@@ -90,13 +95,8 @@
             $creditHour = $pd->test_input($_POST["chr"]);
             $yearTheCourseIsGiven = $pd->test_input($_POST["yr"]);
             $termTheCourseIsGiven = $pd->test_input($_POST["tr"]);
+            $instructedBy=$_POST["names"];
             //print_r($pd->lecturers) ;
-            foreach($pd->lecturers as $key=>$value ) {
-                if(strcmp($pd->test_input($_POST["names"]),$value )==0   ){
-                    $instructedBy=$key; 
-                break;
-                }
-              }
             
             $pd->courseName=$courseName;
             $pd->courseCode=$courseCode;
@@ -109,8 +109,9 @@
     ?>
     <script> 
         var str= '<?php echo $lecturersName ?>'; // variable to store the options
-        var my_list=document.getElementById("names");
-        my_list.innerHTML = str;
+        var my_list=document.getElementById("option2");
+        my_list.innerHTML="";
+        my_list.innerHTML= str;
     </script>
     
 </body>

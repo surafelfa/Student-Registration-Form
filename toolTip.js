@@ -1,5 +1,5 @@
 let setUPToolTip=function(){
-    let tooltip= "Before you click the search button you have to enter student's id that you want to update or delete.";
+    let tooltip= "Before you click the search button you have to enter a person's id that you want to update or delete.";
     let toolTipElements=Array.from(document.querySelectorAll('#searchButton')); //querySelectorAll(".nav-link-wrapper"))
     //let toolTipElements=document.getElementById('searchButton'); //querySelectorAll(".nav-link-wrapper"))
     let toolTipDiv= document.querySelector('.div-tooltip');

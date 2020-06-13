@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form | Register Lectuters</title>
     <link rel="stylesheet" href="main.css">
-    <style>
-        .nav-link-wrapper a:hover,.nav-link-wrapper a:active,.nav-link-wrapper a[href="instructer.php"]{
-        background-color: rgb(8,115,181);
-        color: white;
-        }
-    </style>
 </head>
 <body>
     
@@ -22,22 +16,19 @@
                             <img src=logo.png>
                         </div>
                     </div>
-                    
-                        <div class="right-side">
-                            <div class="nav-link-wrapper"><a href=index.php>Register Student</a></div>
-                            <div class="nav-link-wrapper"><a href="instructer.php">Register Instructer</a></div>
-                            <div class="nav-link-wrapper"><a href="course.php">Register Course</a></div>
-                        </div>
-                    
                 </div>
             </header>
         </div>
     <div class="container">
         
-        <form accept-charset="UTF-8" method="post" name="instructer-form">
+        <form accept-charset="UTF-8" method="post" action="updateInstructer.php">
 
             <div class="registration-form">
                 <h1>Registration Form</h1>
+            </div>
+            <div class="info">
+                <label for="id">Instructer Id: <input type="button" id="searchButton" value="Search" onclick="selectedInstructer()"></label><br>
+                <input type="number" id="id" name="id" autofocus required min="1"><br>
             </div>
             <div class="info">
                 <label for="fname">First name:</label><br>
@@ -63,21 +54,25 @@
                 <input type="text" id="pnumber" name="pnumber"required><br>
             </div>
             <div class="info">
-                <label for="level">Level of education:</label>
+                <label for="level"></label>
                     <select id="level" name="level">                           
                         <option value="Masters degree">Masters degree</option>
                         <option value="Doctoral degree">Doctoral degree</option>
                         <option value="Professional degree">Professional degree</option>
                     </select>
-                <!--<label for="level">Level of education:</label><br>
-                <input type="text" id="level" name="level"required><br>-->
+            </div>
+            <div class="info">
+                <div class="active">
+                    <label for="active"></label>
+                    <select id="active" name="active">                           
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+                
             </div>
             <div class="btn">
-                <input id="submit"type="submit" value="Submit">
-                <input id="reset"type="reset">
-            </div>
-            <div class="btn">
-                <button onclick="window.location.href='updateInstructerPage.php';" id=updatebtn>Update Instructer</button>      
+                <input id="updatebtn" type="submit" value="Update" >
             </div>
         </form>
         <footer>
@@ -88,9 +83,18 @@
     </div>
     <?php
         include 'main.php';
-        $fname = $lname=$gender=$eaddress = $pnumber=$level= "";
+        $instructersFirstName=$instructersLastName=$instructersEmail=$instructersPhoneNumber=[];
+        $instructersGender=$LOE=$instructersStatus=[];
         $pd= new ProcessingData;
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $pd->loadInstructer();
+        $instructersFirstName=$pd->instructersFirstName;
+        $instructersLastName=$pd->instructersLastName;
+        $instructersEmail=$pd->instructersEmail;
+        $instructersPhoneNumber=$pd->instructersPhoneNumber;
+        $instructersGender=$pd->instructersGender;
+        $LOE=$pd->LOE;
+        $instructersStatus=$pd->instructersStatus;
+        /*if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fname = $pd->test_input($_POST["fname"]);
             $lname = $pd->test_input($_POST["lname"]);
             $gender = $pd->test_input($_POST["gender"]);
@@ -108,10 +112,42 @@
             $pd->pnumber=$pnumber;
             $pd->level=$level;
             $pd->insertInstructer();
-        }
+        }*/
 
     ?>
-    
+    <script>
+        
+        var instructersFirstName = <?php echo json_encode($instructersFirstName); ?>;
+        var instructersLastName = <?php echo json_encode($instructersLastName); ?>;
+        var instructersEmail = <?php echo json_encode($instructersEmail); ?>;
+        var instructersPhoneNumber = <?php echo json_encode($instructersPhoneNumber); ?>;
+        
+        var instructersGender = <?php echo json_encode($instructersGender); ?>;
+        
+        var LOE = <?php echo json_encode($LOE); ?>;
+        var instructersStatus = <?php echo json_encode($instructersStatus); ?>;
+        function selectedInstructer(){
+            for(insInfo in instructersFirstName){
+                if(insInfo==document.getElementById('id').value){
+                    document.getElementById('fname').value=instructersFirstName[insInfo];
+                    document.getElementById('lname').value=instructersLastName[insInfo];
+                    if(instructersGender[insInfo]=="male"){
+                        document.getElementById('male').checked=true;
+                        console.log(instructersGender[insInfo]);
+                    }
+                    else{
+                        document.getElementById('female').checked=true;
+                    }
+                    document.getElementById('eaddress').value=instructersEmail[insInfo];
+                    document.getElementById('pnumber').value=instructersPhoneNumber[insInfo];
+                    document.getElementById('level').value=LOE[insInfo];
+                    document.getElementById('active').value=instructersStatus[insInfo];
+                }
+            }
+        }
+    </script>
+    <div class="div-tooltip"></div>
+    <script src=toolTip.js></script>
 </body>
 </html>
 

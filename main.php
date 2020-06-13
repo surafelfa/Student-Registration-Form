@@ -24,6 +24,9 @@ class ProcessingData{
     public $terms=[];
     public $selectedCourses=[];
     public $studentsFirstName=[], $studentsLastName=[], $studentsEmail=[],$studentsPhoneNumber=[];
+    public $instructersFirstName=[], $instructersLastName=[], $instructersEmail=[],$instructersPhoneNumber=[];
+    public $instructersGender=[],$LOE=[],$instructersStatus=[],$updatedInstructerId;
+    
     public function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -57,10 +60,13 @@ class ProcessingData{
             $lecturer=array();
             while($row=mysqli_fetch_assoc($result)){
                 $lecturer=array($row["id"]=>$row["firstname"]." ".$row["lastname"]);
-                $str .= '<option value="'.$row["firstname"]." ".$row["lastname"].'" />';
+                //$str .= '<option value="'.$row["firstname"]." ".$row["lastname"].'" />';
+
+                $str.='<option value="'.$row["id"].'">'.$row["firstname"]." ".$row["lastname"].'</option>';
+
                 $this->lecturers=$this->lecturers+$lecturer;
                 //$this->lecturers=array_merge($this->lecturers,$lecturer);             
-                
+
             }
         }
         $conn=null; 
@@ -177,6 +183,31 @@ class ProcessingData{
             echo $sql . "<br>" . $e->getMessage();
           } 
           $conn=null;       
+    }
+    public function loadInstructer(){
+        $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
+        $sql="SELECT id,firstName,lastName,gender,email,phoneNumber,LOE,active FROM lecturer";
+        $result = mysqli_query($conn, $sql);
+        if(mysqli_num_rows($result) > 0){
+
+            while($row=mysqli_fetch_assoc($result)){
+                $instructerFirstName=array($row["id"]=>$row["firstName"]);
+                $instructerLastName=array($row["id"]=>$row["lastName"]);
+                $instructerGender=array($row["id"]=>$row["gender"]);
+                $instructerEmail=array($row["id"]=>$row["email"]);
+                $instructerPhoneNumber=array($row["id"]=>$row["phoneNumber"]);
+                $LOE=array($row["id"]=>$row["LOE"]);
+                $instructerStatus=array($row["id"]=>$row["active"]);
+                $this->instructersFirstName=$this->instructersFirstName+$instructerFirstName;
+                $this->instructersLastName=$this->instructersLastName+$instructerLastName;
+                $this->instructersGender=$this->instructersGender+$instructerGender;
+                $this->instructersEmail=$this->instructersEmail+$instructerEmail;
+                $this->instructersPhoneNumber=$this->instructersPhoneNumber+$instructerPhoneNumber;
+                $this->LOE=$this->LOE+$LOE;
+                $this->instructersStatus=$this->instructersStatus+$instructerStatus;
+            }
+        }
+        $conn=null; 
     }
     
 }

@@ -96,7 +96,7 @@
             </div>
             
             <div class="btn">
-                    <input id="update"type="submit" value="Update" disabled >
+                    <input id="update"type="submit" value="Update" disabled onclick="window.location.href='index.php';" >
                     <input id="delete"type="submit" value="Delete" formaction="deletestu.php">
             </div>
         </form>
@@ -109,7 +109,6 @@
     <?php
         include_once 'main.php';
         $courseNames=$years=$terms=[];
-        $beingTakenCourses=$selectedYears=$selectedTerms=$previouslySelectedCoursesName=[];
         $studentsFirstName=$studentsLastName=$studentsEmail=$studentsPhoneNumber=[];
         $pd=new ProcessingData;
 
