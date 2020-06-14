@@ -142,6 +142,7 @@
                     document.getElementById('pnumber').value=instructersPhoneNumber[insInfo];
                     document.getElementById('level').value=LOE[insInfo];
                     document.getElementById('active').value=instructersStatus[insInfo];
+                    document.getElementById('id').setAttribute('readonly', 'readonly');
                 }
             }
         }

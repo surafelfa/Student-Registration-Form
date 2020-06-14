@@ -25,8 +25,8 @@ class ProcessingData{
     public $selectedCourses=[];
     public $studentsFirstName=[], $studentsLastName=[], $studentsEmail=[],$studentsPhoneNumber=[];
     public $instructersFirstName=[], $instructersLastName=[], $instructersEmail=[],$instructersPhoneNumber=[];
-    public $instructersGender=[],$LOE=[],$instructersStatus=[],$updatedInstructerId;
-    
+    public $instructersGender=[],$LOE=[],$instructersStatus=[],$updatedInstructerId,$updatedCourseId;
+    public $coursesCode=[],$creditHours=[],$instrucresId=[];
     public function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -90,17 +90,23 @@ class ProcessingData{
     public function loadCourse(){
         $this->courseNames=[];
         $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
-        $sql="SELECT id,courseName, yearTheCourseIsGiven,termTheCourseIsGiven FROM course";
+        $sql="SELECT id,courseName,courseCode,creditHour, yearTheCourseIsGiven,termTheCourseIsGiven,instructerId FROM course";
         $result = mysqli_query($conn, $sql);
         if(mysqli_num_rows($result) > 0){
 
             while($row=mysqli_fetch_assoc($result)){
+                $courseCode=array($row["id"]=>$row["courseCode"]);
+                $creditHour=array($row["id"]=>$row["creditHour"]);
                 $year=array($row["id"]=>$row["yearTheCourseIsGiven"]);
                 $term=array($row["id"]=>$row["termTheCourseIsGiven"]);
                 $courseName=array($row["id"]=>$row["courseName"]);
+                $instructerId=array($row["id"]=>$row["instructerId"]);
+                $this->coursesCode=$this->coursesCode+$courseCode;
+                $this->creditHours=$this->creditHours+$creditHour;
                 $this->years = $this->years+$year;
                 $this->terms = $this->terms+$term;
                 $this->courseNames=$this->courseNames+$courseName;
+                $this->instrucresId=$this->instrucresId+$instructerId;
             }
         }
         $conn=null; 
@@ -209,6 +215,28 @@ class ProcessingData{
         }
         $conn=null; 
     }
-    
+    function updateCourse(){
+        $conn = mysqli_connect("localhost", "root", "", "studentregistrationform");
+        $updatedCourseId=$this->updatedCourseId;
+        $sql= "SELECT c.id FROM course c INNER JOIN studentdetail sd ON c.id= sd.courseId WHERE sd.courseId=$updatedCourseId";
+        $result = mysqli_query($conn, $sql);
+        if(mysqli_num_rows($result) > 0 ){
+            //do not update
+        }
+        else{
+           $name=$this->courseName;
+           $code=$this->courseCode;
+           $crhr=$this->creditHour;
+           $YCG=$this->yearTheCourseIsGiven;
+           $TCG=$this->termTheCourseIsGiven;
+           $instructedBy=$this->instructedBy;
+           $sql = "UPDATE course
+                    SET courseName='$name', courseCode='$code',creditHour='$crhr',
+                        yearTheCourseIsGiven='$YCG',termTheCourseIsGiven = '$TCG',instructerId='$instructedBy'
+                    WHERE id='$updatedCourseId'";
+            mysqli_query($conn, $sql);
+        }
+          $conn=null;   
+    }    
 }
 ?>

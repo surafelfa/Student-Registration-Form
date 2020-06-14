@@ -3,111 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Surafel Fantu">
-    <title>Registration Form | Welcome</title>
+    <title>Registration Form | Register Courses</title>
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="header">
-        <header>
-            <div class="nav-wrapper">
-                <div class="left-side">
-                    <div class=logo>
-                        <img src=logo.png>
+    <body>
+        <div class="header">
+            <header>
+                <div class="nav-wrapper">
+                    <div class="left-side">
+                        <div class=logo>
+                            <img src=logo.png>
+                        </div>
                     </div>
                 </div>
-                <div class="right-side">
-                    <div class="nav-link-wrapper"><a href=index.html>Register Student</a></div>
-                    <div class="nav-link-wrapper"><a href="instructer.html">Register Instructer</a></div>
-                    <div class="nav-link-wrapper"><a href="course.html">Register Course</a></div>
-                </div>
-                
-            </div>
-        </header>
-    </div>
-    
+            </header>
+        </div>
     <div class="container">
 
-        <form accept-charset="UTF-8" action="index.php" method="post" name="main-form">
-            
+        <form accept-charset="UTF-8" method="post" >
+
 
             <div class="registration-form">
                 <h1>Registration Form</h1>
             </div>
-            <div class="main">
-                <div class="left">
-                    <div class="info">
-                        <label for="fname">First name:</label><br>
-                        <input type="text" id="fname" name="fname" autofocus required><br>
-                    </div>
-                    <div class="info">
-                        <label for="lname">Last name:</label><br>
-                        <input type="text" id="lname" name="lname"required><br>
-                    </div>
-                    <div class="info">
-                        <label for="eaddress">Email address:</label><br>
-                        <input type="email" id="eaddress" name="eaddress"required><br>
-                    </div>
-                    <div class="info">
-                        <label for="pnumber">Phone number:</label><br>
-                        <input type="text" id="pnumber" name="pnumber"required><br>
-                    </div>
-
-                </div>
-                <div class="middle">
-                    
-                    <div class="year">
-                        <label>Year student currently is in:</label><br>
-                        <input type="radio" id="first" name="year" value="First year">
-                        <label for="first">First year</label><br>
-                        <input type="radio" id="second" name="year" value="Second year">
-                        <label for="second">Second year</label><br>
-                        <input type="radio" id="third" name="year" value="Third year">
-                        <label for="third">Third year</label><br>
-                        <input type="radio" id="fouth" name="year" value="Fouth year">
-                        <label for="fourth">Fouth year</label><br>
-                    </div>
-                </div>
-                <div class="right">
-                    <div class="term">
-                        <label>Term student currently is in:</label><br>
-                        <input id="option" list="term">
-                        <datalist id="term">
-                            <option value="First Term">
-                            <option value="Second Term">
-                            <option value="Third Term">
-                        </datalist><br>
-                    </div>
-                    
-                    <div class="course">
-                        <label>Courses to be taken:</label><br>
-                        <input type="checkbox" id="course1" name="course1" value="Programming One">
-                        <label for="course1"> Programming One</label><br>
-                        <input type="checkbox" id="course2" name="course2" value="ICT">
-                        <label for="course2"> ICT</label><br>
-                        <input type="checkbox" id="course3" name="course3" value="Calculus">
-                        <label for="course3"> Calculus</label><br>
-                        <input type="checkbox" id="course4" name="course4" value="Sophomore">
-                        <label for="course4"> Sophomore</label><br>
-                    </div>
-                </div>
-                
-
+            <div class="info">
+                <label for="id">Course id: <input type="button" id="searchButton" value="Search" onclick="selectedCourse()"></label><br>
+                <input type="number" id="id" name="id" autofocus required min="1"><br>
             </div>
-            
+            <div class="info">
+                <label for="name">Course name:</label><br>
+                <input type="text" id="name" name="name" autofocus required><br>
+            </div>
+            <div class="info">
+                <label for="code">Course code:</label><br>
+                <input type="text" id="code" name="code"required><br>
+            </div>
+            <div class="info">
+                <label for="chr">Credit hours:</label><br>
+                <input type="number" id="chr" name="chr"required max="5" min="3"><br>
+            </div>
+            <div class="info">
+                <label for="yr">Year the course is given:</label><br>
+                <input type="number" id="yr" name="yr"required max="4" min="1"><br>
+            </div>
+            <div class="info">
+                <label for="tr">Term the course is given:</label><br>
+                <input type="number" id="tr" name="tr"required max="3" min="1"><br>
+            </div>
+            <div class="info">
+                <label for="names">Instructed by:</label><br>
+                        <select id="option2" name="names" required>
+                        </select>
+            </div>
             <div class="btn">
-                <input id="submit"type="submit" value="Submit">
-                <input id="reset"type="reset">
+                    <input id="update"type="submit" value="Update" disabled >
+                    <input id="delete"type="submit" value="Delete" formaction="deleteCourse.php">
             </div>
         </form>
         <footer>
             <div class="copy">
-                <p>&copy; 2020-2012</p>
+                <p>&copy; 2020-2021</p>
             </div>
         </footer>
-        
     </div>
-    
+    <!--<?php
+        include_once 'main.php';
+        $pd= new ProcessingData;
+        $lecturersName=$pd->loadInstructers();
+        $courseName=$courseCode=$creditHour=$yearTheCourseIsGiven=$termTheCourseIsGiven="";
+        $instructedBy=0;
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $courseName = $pd->test_input($_POST["name"]);
+            $courseCode = $pd->test_input($_POST["code"]);
+            $creditHour = $pd->test_input($_POST["chr"]);
+            $yearTheCourseIsGiven = $pd->test_input($_POST["yr"]);
+            $termTheCourseIsGiven = $pd->test_input($_POST["tr"]);
+            $instructedBy=$_POST["names"];
+            //print_r($pd->lecturers) ;
+            
+            $pd->courseName=$courseName;
+            $pd->courseCode=$courseCode;
+            $pd->creditHour=$creditHour;
+            $pd->yearTheCourseIsGiven=$yearTheCourseIsGiven;
+            $pd->termTheCourseIsGiven=$termTheCourseIsGiven;
+            $pd->instructedBy=$instructedBy;
+            $pd->insertCourse();
+        }
+    ?>
+    <script> 
+        var str= '<?php echo $lecturersName ?>'; // variable to store the options
+        var my_list=document.getElementById("option2");
+        my_list.innerHTML="";
+        my_list.innerHTML= str;
+    </script>
+-->
+    <div class="div-tooltip"></div>
+    <script src=toolTipForCourse.js></script>
 </body>
 </html>

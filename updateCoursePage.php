@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form | Register Courses</title>
     <link rel="stylesheet" href="main.css">
-    <style>
-        .nav-link-wrapper a:hover,.nav-link-wrapper a:active,.nav-link-wrapper a[href="course.php"]{
-        background-color: rgb(8,115,181);
-        color: white;
-        }
-    </style>
 </head>
 <body>
     <body>
@@ -22,23 +16,20 @@
                             <img src=logo.png>
                         </div>
                     </div>
-                    
-                        <div class="right-side">
-                            <div class="nav-link-wrapper"><a href=index.php>Register Student</a></div>
-                            <div class="nav-link-wrapper"><a href="instructer.php">Register Instructer</a></div>
-                            <div class="nav-link-wrapper"><a href="course.php">Register Course</a></div>
-                        </div>
-                    
                 </div>
             </header>
         </div>
     <div class="container">
 
-        <form accept-charset="UTF-8" method="post" >
+        <form accept-charset="UTF-8" method="post" action="updateCourse.php">
 
 
             <div class="registration-form">
                 <h1>Registration Form</h1>
+            </div>
+            <div class="info">
+                <label for="id">Course id: <input type="button" id="searchButton" value="Search" onclick="selectedCourse()"></label><br>
+                <input type="number" id="id" name="id" autofocus required min="1"><br>
             </div>
             <div class="info">
                 <label for="name">Course name:</label><br>
@@ -66,11 +57,8 @@
                         </select>
             </div>
             <div class="btn">
-                <input id="submit"type="submit" value="Submit">
-                <input id="reset"type="reset">
-            </div>
-            <div class="btn">
-                <button onclick="window.location.href='updateCoursePage.php';" id=updatebtn>Update Course</button>      
+                    <input id="update"type="submit" value="Update" >
+                    <input id="delete"type="submit" value="Delete" formaction="deleteCourse.php">
             </div>
         </form>
         <footer>
@@ -82,33 +70,44 @@
     <?php
         include_once 'main.php';
         $pd= new ProcessingData;
+        $pd->loadCourse();
+        $coursesCode=$pd->coursesCode;
+        $creditHours=$pd->creditHours;
+        $years=$pd->years;
+        $terms=$pd->terms;
+        $courseNames=$pd->courseNames;
+        $instructersId=$pd->instrucresId;
         $lecturersName=$pd->loadInstructers();
-        $courseName=$courseCode=$creditHour=$yearTheCourseIsGiven=$termTheCourseIsGiven="";
-        $instructedBy=0;
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $courseName = $pd->test_input($_POST["name"]);
-            $courseCode = $pd->test_input($_POST["code"]);
-            $creditHour = $pd->test_input($_POST["chr"]);
-            $yearTheCourseIsGiven = $pd->test_input($_POST["yr"]);
-            $termTheCourseIsGiven = $pd->test_input($_POST["tr"]);
-            $instructedBy=$_POST["names"];
-            //print_r($pd->lecturers) ;
-            
-            $pd->courseName=$courseName;
-            $pd->courseCode=$courseCode;
-            $pd->creditHour=$creditHour;
-            $pd->yearTheCourseIsGiven=$yearTheCourseIsGiven;
-            $pd->termTheCourseIsGiven=$termTheCourseIsGiven;
-            $pd->instructedBy=$instructedBy;
-            $pd->insertCourse();
-        }
+        
     ?>
     <script> 
         var str= '<?php echo $lecturersName ?>'; // variable to store the options
         var my_list=document.getElementById("option2");
         my_list.innerHTML="";
         my_list.innerHTML= str;
+
+        var courseNames = <?php echo json_encode($courseNames); ?>;
+        var coursesCode = <?php echo json_encode($coursesCode); ?>;
+        var creditHours = <?php echo json_encode($creditHours); ?>;
+        var years= <?php echo json_encode($years); ?>;
+        var terms = <?php echo json_encode($terms); ?>;
+        var instructersId = <?php echo json_encode($instructersId); ?>;
+
+        function selectedCourse(){
+            for(courseInfo in courseNames){
+                if(courseInfo==document.getElementById('id').value){
+                    document.getElementById('name').value=courseNames[courseInfo];
+                    document.getElementById('code').value=coursesCode[courseInfo];
+                    document.getElementById('chr').value=creditHours[courseInfo];
+                    document.getElementById('yr').value=years[courseInfo];
+                    document.getElementById('tr').value=terms[courseInfo];
+                    document.getElementById('option2').value=instructersId[courseInfo];
+                    document.getElementById('id').setAttribute('readonly', 'readonly');
+                }
+            }
+        }
     </script>
-    
+    <div class="div-tooltip"></div>
+    <script src=toolTipForCourse.js></script>
 </body>
 </html>
